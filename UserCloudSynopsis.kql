@@ -1,0 +1,8 @@
+AADSignInEventsBeta 
+| join IdentityLogonEvents on AccountUpn
+| join CloudAppEvents on AccountDisplayName //combines the above three datasets into one
+// Place username in the below quotes
+| where AccountUpn contains "[USER]"
+| where RiskLevelAggregated >= 0// and Location != "US" 
+| project ActionType1, RiskLevelDuringSignIn, Application, RiskLevelAggregated, Location, IPAddress, LogonType, ErrorCode, AccountUpn, AlternateSignInName, LastPasswordChangeTimestamp, RiskEventTypes
+| summarize Count=count() by ActionType1
